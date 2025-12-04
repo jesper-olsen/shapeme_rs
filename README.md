@@ -72,3 +72,14 @@ Or use the included script:
 
 ![Mona - org](Assets/mona_lisa_head.png)
 ![Mona - annealing](Assets/triangles.png)
+
+<table>
+  <tr>
+    <td><b>Original</b></td>
+    <td><b>Simulated Annealing (128 triangles)</b></td>
+  </tr>
+  <tr>
+    <td><img src="Assets/mona_lisa_head.png" alt="Original" height="400"></td>
+    <td><img src="Assets/triangles.svg" alt="Annealing result" height="400"></td>
+  </tr>
+</table>
