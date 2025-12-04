@@ -71,4 +71,4 @@ Or use the included script:
 * PNG - Rasterized output at original image dimensions
 
 ![Mona - org](Assets/mona_lisa_head.png)
-![Mona - annealing](Assets/triangles.svg)
+![Mona - annealing](Assets/triangles.png)
