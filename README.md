@@ -69,3 +69,6 @@ Or use the included script:
 
 * SVG - Vector output, scalable to any size
 * PNG - Rasterized output at original image dimensions
+
+![Mona - org](Assets/mona_lisa_head.png)
+![Mona - annealing](Assets/triangles.svg)
