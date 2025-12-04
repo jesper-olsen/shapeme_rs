@@ -70,13 +70,10 @@ Or use the included script:
 * SVG - Vector output, scalable to any size
 * PNG - Rasterized output at original image dimensions
 
-![Mona - org](Assets/mona_lisa_head.png)
-![Mona - annealing](Assets/triangles.png)
-
 <table>
   <tr>
     <td><b>Original</b></td>
-    <td><b>Simulated Annealing (128 triangles)</b></td>
+    <td><b>Simulated Annealing (64 triangles)</b></td>
   </tr>
   <tr>
     <td><img src="Assets/mona_lisa_head.png" alt="Original"></td>
