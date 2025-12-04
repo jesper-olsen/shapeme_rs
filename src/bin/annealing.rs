@@ -48,9 +48,9 @@ struct Args {
     #[arg(long, default_value = "triangles.png")]
     output_png: String,
 
-    /// Maximum number of triangles
-    #[arg(short, long, default_value_t = 128)]
-    max_shapes: usize,
+    /// Maximum number of triangles 
+    #[arg(short = 's', long, default_value_t = 128)]
+    num_shapes: usize,
 
     /// Number of generations
     #[arg(short, long, default_value_t = 500_000)]
@@ -107,12 +107,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if !args.quiet {
         println!("Successfully loaded image: {width}x{height}");
-        println!("Settings: max_shapes={}, generations={}, cooling_rate={}", 
-                 args.max_shapes, args.generations, args.cooling_rate);
+        println!("Settings: num_shapes={}, generations={}, cooling_rate={}", 
+                 args.num_shapes, args.generations, args.cooling_rate);
     }
 
     let mut rng = MersenneTwister64::new(args.seed);
-    let mut triangles: Vec<Triangle> = Vec::with_capacity(args.max_shapes);
+    let mut triangles: Vec<Triangle> = Vec::with_capacity(args.num_shapes);
     triangles.push(Triangle::random(&mut rng, width, height));
 
     let reference = FrameBuffer::from_image(&img);
@@ -137,7 +137,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Add triangles periodically
         if generation % args.add_interval == 0
             && generation > 0
-            && triangles.len() < args.max_shapes
+            && triangles.len() < args.num_shapes
         {
             triangles.push(Triangle::random(&mut rng, width, height));
             temperature = temperature.max(args.reheat_temp);
@@ -180,8 +180,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Logging
         if !args.quiet && args.log_interval > 0 && generation % args.log_interval == 0 {
             println!(
-                "Gen {generation}: current={current_diff}, best={best_diff}, temp={temperature:.6}, triangles={}",
-                triangles.len()
+                "Gen {generation}/{}: current={current_diff}, best={best_diff}, temp={temperature:.6}, triangles={}",
+                triangles.len(), args.generations
             );
         }
 

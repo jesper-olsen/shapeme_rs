@@ -45,8 +45,8 @@ struct Args {
     #[arg(long, default_value = "triangles_ga.png")]
     output_png: String,
 
-    /// Number of triangles per individual
-    #[arg(short = 's', long, default_value_t = 50)]
+    /// Number of triangles 
+    #[arg(short = 's', long, default_value_t = 128)]
     num_shapes: usize,
 
     /// Population size
@@ -237,8 +237,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Logging
         if !args.quiet && args.log_interval > 0 && generation % args.log_interval == 0 {
             println!(
-                "Gen {}: best_ever={}, gen_best={}, gen_worst={}",
+                "Gen {}/{}: best_ever={}, gen_best={}, gen_worst={}",
                 generation,
+                args.generations,
                 best_ever.fitness,
                 population[0].fitness,
                 population[args.population - 1].fitness

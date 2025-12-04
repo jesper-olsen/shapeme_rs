@@ -15,6 +15,16 @@ This project approximates images by iteratively placing semi-transparent triangl
 cargo build --release
 ```
 
+## Usage
+
+```bash
+cargo run --bin annealing --release -- Assets/mona_lisa_head.png --num-shapes 64
+```
+
+```bash
+cargo run --bin genetic --release -- Assets/mona_lisa_head.png --num-shapes 64
+```
+
 ## Creating Animations
 
 Both binaries save frames to the frames/ directory by default. Use FFmpeg to create a video:
@@ -74,9 +84,11 @@ Or use the included script:
   <tr>
     <td><b>Original</b></td>
     <td><b>Simulated Annealing (64 triangles)</b></td>
+    <td><b>Genetic Evolution (64 triangles)</b></td>
   </tr>
   <tr>
     <td><img src="Assets/mona_lisa_head.png" alt="Original"></td>
-    <td><img src="Assets/triangles.png" alt="Annealing result"></td>
+    <td><img src="Assets/triangles_annealing64.png" alt="Annealing result"></td>
+    <td><img src="Assets/triangles_genetic64.png" alt="Genetic result"></td>
   </tr>
 </table>
