@@ -79,7 +79,7 @@ Or use the included script:
     <td><b>Simulated Annealing (128 triangles)</b></td>
   </tr>
   <tr>
-    <td><img src="Assets/mona_lisa_head.png" alt="Original" height="400"></td>
-    <td><img src="Assets/triangles.svg" alt="Annealing result" height="400"></td>
+    <td><img src="Assets/mona_lisa_head.png" alt="Original"></td>
+    <td><img src="Assets/triangles.png" alt="Annealing result"></td>
   </tr>
 </table>
