@@ -149,7 +149,7 @@ impl Triangle {
     pub fn mutate<R: RngCore + ?Sized>(&mut self, rng: &mut R, width: u16, height: u16) {
         match rng.next_u64() % 10 {
             // Changed from 6
-            0 => *self = Triangle::random(rng, width, height), 
+            0 => *self = Triangle::random(rng, width, height),
             1 | 2 => self.mutate_vertices(rng, width, height, 3), // Small vertex moves
             3 | 4 => self.mutate_vertices(rng, width, height, 10), // Medium vertex moves
             5 | 6 => self.colour.mutate_colour(rng, 10),

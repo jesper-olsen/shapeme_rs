@@ -4,22 +4,22 @@
 
 // # Basic usage
 // cargo run --release --bin shapeme-ga -- image.png
-// 
+//
 // # More triangles and larger population
 // cargo run --release --bin shapeme-ga -- image.png -s 100 -p 100
-// 
+//
 // # Longer run with higher mutation rate
 // cargo run --release --bin shapeme-ga -- image.png -g 50000 -m 0.1
-// 
+//
 // # Larger tournament size (more selection pressure)
 // cargo run --release --bin shapeme-ga -- image.png -k 5
-// 
+//
 // # More elitism (preserve more top individuals)
 // cargo run --release --bin shapeme-ga -- image.png -e 5
-// 
+//
 // # Custom output
 // cargo run --release --bin shapeme-ga -- image.png -o result.svg --output-png result.png
-// 
+//
 // # Quiet mode, no frames
 // cargo run --release --bin shapeme-ga -- image.png -q --frame-interval 0
 
@@ -27,12 +27,16 @@ use clap::Parser;
 use image::GenericImageView;
 use mersenne_twister_rs::MersenneTwister64;
 use rand_core::RngCore;
-use shapeme_rs::{save_svg, FrameBuffer, Triangle};
+use shapeme_rs::{FrameBuffer, Triangle, save_svg};
 use std::path::Path;
 
 #[derive(Parser, Debug)]
 #[command(name = "shapeme-ga")]
-#[command(author, version, about = "Approximate images using triangles via genetic algorithm")]
+#[command(
+    author,
+    version,
+    about = "Approximate images using triangles via genetic algorithm"
+)]
 struct Args {
     /// Input image path
     input: String,
@@ -45,7 +49,7 @@ struct Args {
     #[arg(long, default_value = "triangles_ga.png")]
     output_png: String,
 
-    /// Number of triangles 
+    /// Number of triangles
     #[arg(short = 's', long, default_value_t = 128)]
     num_shapes: usize,
 
@@ -157,7 +161,6 @@ fn tournament_select<'a, R: RngCore>(
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
-    // Validate arguments
     if args.elitism >= args.population {
         eprintln!("Error: elitism must be less than population size");
         std::process::exit(1);
@@ -167,7 +170,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     }
 
-    // Create frames directory if needed
     if !args.frames_dir.is_empty() && args.frame_interval > 0 {
         std::fs::create_dir_all(&args.frames_dir)?;
     }
@@ -178,9 +180,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if !args.quiet {
         println!("Successfully loaded image: {width}x{height}");
-        println!(
-            "Settings: shapes={}, population={}, generations={}, mutation_rate={}",
-            args.num_shapes, args.population, args.generations, args.mutation_rate
+        println!("Settings: shapes={}, population={}, generations={}, mutation_rate={}",
+            args.num_shapes,
+            args.population,
+            args.generations,
+            args.mutation_rate
         );
     }
 
@@ -189,12 +193,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let reference = FrameBuffer::from_image(&img);
     let mut fb = FrameBuffer::new(width, height);
 
-    // Initialize population
     let mut population: Vec<Individual> = (0..args.population)
         .map(|_| Individual::new(&mut rng, args.num_shapes, width, height))
         .collect();
 
-    // Evaluate initial population
     for individual in &mut population {
         individual.evaluate(&mut fb, &reference);
     }
@@ -210,12 +212,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for generation in 0..args.generations {
         let mut new_population: Vec<Individual> = Vec::with_capacity(args.population);
 
-        // Elitism
-        for i in 0..args.elitism {
-            new_population.push(population[i].clone());
+        // new population = Elitism + crossover + mutation
+        for e in &population[..args.elitism] {
+            new_population.push(e.clone());
         }
 
-        // Generate rest through selection, crossover, mutation
         while new_population.len() < args.population {
             let parent1 = tournament_select(&population, &mut rng, args.tournament_size);
             let parent2 = tournament_select(&population, &mut rng, args.tournament_size);
@@ -223,7 +224,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let mut child = crossover(parent1, parent2, &mut rng);
             child.mutate(&mut rng, width, height, args.mutation_rate);
             child.evaluate(&mut fb, &reference);
-
             new_population.push(child);
         }
 
@@ -237,8 +237,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Logging
         if !args.quiet && args.log_interval > 0 && generation % args.log_interval == 0 {
             println!(
-                "Gen {}/{}: best_ever={}, gen_best={}, gen_worst={}",
-                generation,
+                "Gen {generation}/{}: best_ever={}, gen_best={}, gen_worst={}",
                 args.generations,
                 best_ever.fitness,
                 population[0].fitness,

@@ -1,28 +1,28 @@
 // Simulated annealing - approximate a .png image with triangles.
-// Write final result to .png and .svg files and optionally intermediate 
+// Write final result to .png and .svg files and optionally intermediate
 // "frames" so that the process can be annimated.
 
 // # Basic usage
 // cargo run --release -- Assets/mona_lisa_400x596.png
-// 
+//
 // # Custom output names
 // cargo run --release -- Assets/mona_lisa.png -o mona.svg --output-png mona.png
-// 
+//
 // # More triangles, longer run
 // cargo run --release -- image.png -s 256 -g 1000000
-// 
+//
 // # Faster cooling (converges quicker but maybe worse result)
 // cargo run --release -- image.png -c 0.9999
-// 
+//
 // # No animation frames
 // cargo run --release -- image.png --frame-interval 0
-// 
+//
 // # Different seed for reproducibility
 // cargo run --release -- image.png --seed 12345
-// 
+//
 // # Quiet mode
 // cargo run --release -- image.png -q
-// 
+//
 // # Show help
 // cargo run --release -- --help
 
@@ -30,12 +30,16 @@ use clap::Parser;
 use image::GenericImageView;
 use mersenne_twister_rs::MersenneTwister64;
 use rand_core::RngCore;
-use shapeme_rs::{save_svg, FrameBuffer, Triangle};
+use shapeme_rs::{FrameBuffer, Triangle, save_svg};
 use std::path::Path;
 
 #[derive(Parser, Debug)]
 #[command(name = "shapeme")]
-#[command(author, version, about = "Approximate images using triangles via simulated annealing")]
+#[command(
+    author,
+    version,
+    about = "Approximate images using triangles via simulated annealing"
+)]
 struct Args {
     /// Input image path
     input: String,
@@ -48,7 +52,7 @@ struct Args {
     #[arg(long, default_value = "triangles.png")]
     output_png: String,
 
-    /// Maximum number of triangles 
+    /// Maximum number of triangles
     #[arg(short = 's', long, default_value_t = 128)]
     num_shapes: usize,
 
@@ -107,8 +111,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if !args.quiet {
         println!("Successfully loaded image: {width}x{height}");
-        println!("Settings: num_shapes={}, generations={}, cooling_rate={}", 
-                 args.num_shapes, args.generations, args.cooling_rate);
+        println!(
+            "Settings: num_shapes={}, generations={}, cooling_rate={}",
+            args.num_shapes, args.generations, args.cooling_rate
+        );
     }
 
     let mut rng = MersenneTwister64::new(args.seed);
@@ -181,7 +187,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if !args.quiet && args.log_interval > 0 && generation % args.log_interval == 0 {
             println!(
                 "Gen {generation}/{}: current={current_diff}, best={best_diff}, temp={temperature:.6}, triangles={}",
-                triangles.len(), args.generations
+                triangles.len(),
+                args.generations
             );
         }
 
